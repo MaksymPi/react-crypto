@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react'
 
-import { Layout, Card, Statistic, List, Typography, Spin } from 'antd';
+import { Layout, Card, Statistic, List, Typography, Spin, Tag } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 
 import uuid from 'react-uuid';
 import { FetchData, FetchAssets } from '../../api';
-import { percentDifference } from '../../utils/'
+import { percentDifference, capitalize } from '../../utils/'
 
 
 const siderStyle = {
     padding: '1rem',
 };
-
-
-
-
-
 const AppSider = () => {
     const [loading, setLoading] = useState(false)
     const [crypto, setCrypto] = useState([])
@@ -52,42 +47,31 @@ const AppSider = () => {
         {assets.map(asset => (
             <Card key={uuid()} style={{ marginBottom: '1rem' }}>
                 <Statistic
-                    title={asset.id}
+                    title={capitalize(asset.id)}
                     value={asset.totalAmount}
                     precision={2}
-                    valueStyle={{ color: asset.grow ? '#3f8600' : '#cf1322'}}
+                    valueStyle={{ color: asset.grow ? '#3f8600' : '#cf1322' }}
                     prefix={asset.grow ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
                     suffix="$"
                 />
                 <List
                     size='small'
                     dataSource={[
-                        {title: 'Total Profit', value: asset.totalProfit},
-                        {title: 'Asset Amount', value: asset.amount},
-                        {title: 'Difference', value: asset.growPercent},
+                        { title: 'Total Profit', value: asset.totalProfit, withTag: true },
+                        { title: 'Asset Amount', value: asset.amount, isPlain: true },
                     ]}
                     renderItem={(item) => (
                         <List.Item>
                             <span>{item.title}</span>
-                            <span>{item.value}</span>
+                            <span>
+                                {item.withTag && <Tag color={asset.grow ? 'green' : 'red'}>{asset.growPercent}%</Tag>}
+                                {item.isPlain ? item.value : <Typography.Text type={asset.grow ? 'success' : 'danger'}>{item.value.toFixed(2)}$</Typography.Text>}
+                            </span>
                         </List.Item>
                     )}
                 />
             </Card>
         ))}
-
-        {/* <Card>
-            <Statistic
-                title="Idle"
-                value={9.3}
-                precision={2}
-                valueStyle={{
-                    color: '#cf1322',
-                }}
-                prefix={<ArrowDownOutlined />}
-                suffix="%"
-            />
-        </Card> */}
     </Layout.Sider>
     )
 }

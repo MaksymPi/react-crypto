@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 import { useCrypto } from '../../context/crypto-context'
-import AddAssetForm from './AddAssetForm';
+import AddAssetForm from '../AddAssetForm';
 
-import CoinInfoModal from './CoinInfoModal';
+import CoinInfoModal from '../CoinInfoModal';
 
 const headerStyle = {
   width: '100%',
@@ -23,7 +23,7 @@ const AppHeader = () => {
   const [select, setSelect] = useState(false)
   const [coin, setCoin] = useState(null)
   const [modal, setModal] = useState(false)
-  const [drawer, setDrawer] = useState(true)
+  const [drawer, setDrawer] = useState(false)
   const { crypto } = useCrypto()
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const AppHeader = () => {
       onClose={() => setDrawer(false)}
       open={drawer}
       destroyOnClose>
-        <AddAssetForm />
+        <AddAssetForm onClose={() => setDrawer(false)} />
     </Drawer>
 
   </Layout.Header>)
